@@ -2,8 +2,8 @@
 # coding: utf-8
 
 # In[ ]:
-#fuck
 
+#wuchangiee
 import pygame
 import random
 import math
