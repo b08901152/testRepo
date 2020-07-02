@@ -6,7 +6,7 @@
 	
 		git clone https://github.com/kartd42251/gobang.git
 		
-###### 記得所有指令都要在git根目錄(testRepo)執行#####
++==+==+==+記得所有指令都要在git根目錄(testRepo)執行+==+==+==+
 
 之後更新資料夾：	
 
