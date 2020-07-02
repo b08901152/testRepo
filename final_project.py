@@ -2,7 +2,7 @@
 # coding: utf-8
 
 # In[ ]:
-
+#fuck
 
 import pygame
 import random
