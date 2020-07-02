@@ -2,6 +2,8 @@
 	git clone "url"
 	Example:
 		git clone https://github.com/kartd42251/gobang.git
+
+###### 記得所有指令都要在git根目錄(testRepo)執行#####
 之後更新資料夾：	
 	git pull	
 寫完之後記錄檔案變更：	
@@ -13,7 +15,7 @@
 	git push
 
 執行檔案
-	cd game_src
+	cd src_v2
 	python3 main.py
 	
 #file add by Harrison
