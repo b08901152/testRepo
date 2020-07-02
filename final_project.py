@@ -14,7 +14,7 @@ from pygame.locals import *
 
 pygame.init()
 
-screen = pygame.display.set_mode((1400, 800))
+screen = pygame.display.set_mode((14, 800))
 clock = pygame.time.Clock()
 
 BLACK = (0, 0, 0)
