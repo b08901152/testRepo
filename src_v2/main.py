@@ -1,5 +1,6 @@
 import pygame
 import random
+import gameBasic
 
 WIDTH = 480
 HEIGHT = 360
