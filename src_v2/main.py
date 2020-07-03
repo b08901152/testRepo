@@ -24,14 +24,11 @@ while running:
     keys = pygame.key.get_pressed()
 
     player1.moveHandleP1(keys, bullets1)
-    player2.moveHandleP2(keys, bullets2)
+    # player2.moveHandleP2(keys, bullets2)
 
-    for bullet in bullets1:
-        bullet.x += bullet.vel[0]
-        bullet.y += bullet.vel[1]
-    for bullet in bullets2:
-        bullet.x += bullet.vel[0]
-        bullet.y += bullet.vel[1]
-    drawScreen(screen, player1, player2, background, bullets1, bullets2)
+    bulletsHandle(bullets1)
+    bulletsHandle(bullets2)
+
+    drawScreen(screen, player1, None, background, bullets1, bullets2)
 
 pygame.quit()
