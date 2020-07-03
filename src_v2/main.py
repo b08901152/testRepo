@@ -2,41 +2,36 @@ import pygame
 import random
 from gameBasic import *
 
-WIDTH = 1400
-HEIGHT = 800
-FPS = 40
-
 pygame.init()
 pygame.mixer.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("My Game")
+screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
+pygame.display.set_caption("Twilight War")
 clock = pygame.time.Clock()
+background = pygame.image.load("../lib/image/map.png")
+background = pygame.transform.scale(background, (SCREENWIDTH, SCREENHEIGHT))
 
 
-
-failImage = pygame.image.load(
-    '../lib/image/player1.png').convert_alpha()  # player1要用的圖
-man = Player("harry", failImage, 200, 200, 64, 64, (10, 10))
-
+player1, player2 = createCharacter()
+bullets1 = []
+bullets2 = []
 running = True
 while running:
     clock.tick(FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            
-    keys = pygame.key.get_pressed()
-    
-    if keys[pygame.K_LEFT]:
-        man.moveLeft()
-    if keys[pygame.K_RIGHT]:
-        man.moveRight()
-    if keys[pygame.K_UP]:
-        man.moveUp()
-    if keys[pygame.K_DOWN]:
-        man.moveDown()
 
-    screen.fill(BLACK)
-    drawScreen(screen,man,None)
+    keys = pygame.key.get_pressed()
+
+    player1.moveHandleP1(keys, bullets1)
+    player2.moveHandleP2(keys, bullets2)
+
+    for bullet in bullets1:
+        bullet.x += bullet.vel[0]
+        bullet.y += bullet.vel[1]
+    for bullet in bullets2:
+        bullet.x += bullet.vel[0]
+        bullet.y += bullet.vel[1]
+    drawScreen(screen, player1, player2, background, bullets1, bullets2)
 
 pygame.quit()
