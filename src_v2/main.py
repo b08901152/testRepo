@@ -23,7 +23,7 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-    player1.moveHandleP1(keys, bullets1)
+    player1.moveHandleP2(keys, bullets1)
     # player2.moveHandleP2(keys, bullets2)
 
     bulletsHandle(bullets1)
