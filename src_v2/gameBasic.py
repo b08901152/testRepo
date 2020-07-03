@@ -37,7 +37,7 @@ def createCharacter():
     player1 = Player("harry", Image, 200, 200, 64, 64, (10, 10))
 
     Image2 = pygame.image.load(
-        '../lib/image/player2.png').convert_alpha()  # player1要用的圖
+        '../lib/image/player2.png').convert_alpha()  # player2要用的圖
     player2 = Player("hary", Image2, 200, 200, 64, 64, (10, 10))
     return player1, player2
 
@@ -81,11 +81,16 @@ class Player(pygame.sprite.Sprite):
             
     def draw(self, screen):
         pygame.draw.rect(screen, RED,
-                         (self.rect.x, self.rect.y-5, 70, 5))
+                         (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
         pygame.draw.rect(screen, GREEN,
-                         (self.rect.x, self.rect.y-5, self.life, 5))
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+                         (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, self.life, 5))
+
         self.facing = self.calFacing()
+        rotate_image=pygame.transform.rotate(self.image, -self.facing*180/math.pi)
+        self.rect=rotate_image.get_rect(center=(self.rect.centerx,self.rect.centery))
+        screen.blit(rotate_image, (self.rect.x, self.rect.y))
+        
+
 
     def moveHandleP1(self, keys, bullets):
         if keys[pygame.K_LEFT]:
@@ -120,7 +125,7 @@ class Player(pygame.sprite.Sprite):
         pos = pygame.mouse.get_pos()
         deltaY = (pos[1] - self.middleY)
         deltaX = (pos[0] - self.middleX)
-        print(deltaX,deltaY)
+        #print(deltaX,deltaY)
         if deltaX == 0 and deltaY > 0:
             return math.pi/2
         elif deltaX == 0 and deltaY < 0:
@@ -129,7 +134,7 @@ class Player(pygame.sprite.Sprite):
         theta = math.atan(deltaY/deltaX)
         if deltaX < 0:
             theta += math.pi
-        print(theta)
+        #print(theta)
         return theta
 
 
