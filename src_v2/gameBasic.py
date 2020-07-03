@@ -128,22 +128,14 @@ class Player(pygame.sprite.Sprite):
         pos = pygame.mouse.get_pos()
         deltaY = (pos[1] - self.middleY)
         deltaX = (pos[0] - self.middleX)
-<<<<<<< HEAD
-        #print(deltaX,deltaY)
-=======
->>>>>>> 20daef70b4ece473ffebc215309a6a2dde974de8
+
         if deltaX == 0 and deltaY > 0:
             return math.pi/2
         elif deltaX == 0 and deltaY < 0:
             return math.pi*3/2
-
         theta = math.atan(deltaY/deltaX)
         if deltaX < 0:
             theta += math.pi
-<<<<<<< HEAD
-        #print(theta)
-=======
->>>>>>> 20daef70b4ece473ffebc215309a6a2dde974de8
         return theta
 
 
