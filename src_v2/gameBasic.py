@@ -5,12 +5,42 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+
+
+def drawScreen(screen,player1, player2):
+    player1.draw(screen)
+    pygame.display.flip()
+    
 class Player(pygame.sprite.Sprite):
-    def __init__(self, name, image, up, down, left, right, attack, change, pick, x, y, w, h, speed=(0, 0)):
+    def __init__(self, name, image, x, y, w, h, speed=(0, 0)):
         super().__init__()
+        self.name = name
+        self.x = x
+        self.y = y
+        self.image = pygame.transform.scale(image, (int(w), int(h)))
+        self.rect = pygame.rect.Rect(x, y, w, h)
+        self.speed = speed
+        self.life = 70
+
+    def moveUp(self):
+        self.rect.y -= self.speed[1]
+
+    def moveDown(self):
+        self.rect.y += self.speed[1]
+
+    def moveLeft(self):
+        self.rect.x -= self.speed[0]
+
+    def moveRight(self):
+        self.rect.x += self.speed[0]
 
     def draw(self, screen):
-        pass
+        pygame.draw.rect(screen, RED,
+                         (self.rect.x, self.rect.y-10, 70, 5))
+        pygame.draw.rect(screen, GREEN, 
+                         (self.rect.x, self.rect.y-10, self.life, 5))
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+
 
 class Bullet(pygame.sprite.Sprite):
 
