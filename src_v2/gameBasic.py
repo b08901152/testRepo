@@ -9,7 +9,7 @@ BLUE = (0, 0, 255)
 
 
 SCREENWIDTH = 700
-SCREENHEIGHT = 400
+SCREENHEIGHT = 700
 FPS = 40
 
 
@@ -57,28 +57,31 @@ class Player(pygame.sprite.Sprite):
         self.facing = 0
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
-        
+
     def moveUp(self):
         if not self.rect.top < 0:
             self.rect.y -= self.speed[1]
             self.y -= self.speed[1]
             self.middleY = self.y+self.h//2
+
     def moveDown(self):
         if not self.rect.bottom >= SCREENHEIGHT:
             self.rect.y += self.speed[1]
             self.y += self.speed[1]
             self.middleY = self.y+self.h//2
+
     def moveLeft(self):
         if not self.rect.left < 0:
             self.rect.x -= self.speed[0]
             self.x -= self.speed[0]
             self.middleX = self.x+self.w//2
+
     def moveRight(self):
         if not self.rect.right > SCREENWIDTH:
             self.rect.x += self.speed[0]
             self.x += self.speed[0]
             self.middleX = self.x+self.w//2
-            
+
     def draw(self, screen):
         pygame.draw.rect(screen, RED,
                          (self.rect.x, self.rect.y-5, 70, 5))
@@ -110,7 +113,7 @@ class Player(pygame.sprite.Sprite):
             self.moveUp()
         if keys[pygame.K_s]:
             self.moveDown()
-        if keys[pygame.K_w]:
+        if pygame.mouse.get_pressed()[0]:
             bullets.append(Bullet(round(self.x+self.w//2),
                                   round(self.y+self.h//2),
                                   self.facing))
@@ -120,16 +123,14 @@ class Player(pygame.sprite.Sprite):
         pos = pygame.mouse.get_pos()
         deltaY = (pos[1] - self.middleY)
         deltaX = (pos[0] - self.middleX)
-        print(deltaX,deltaY)
         if deltaX == 0 and deltaY > 0:
             return math.pi/2
         elif deltaX == 0 and deltaY < 0:
             return math.pi*3/2
-        
+
         theta = math.atan(deltaY/deltaX)
         if deltaX < 0:
             theta += math.pi
-        print(theta)
         return theta
 
 
@@ -141,12 +142,13 @@ class Bullet(pygame.sprite.Sprite):
         self.y = y
         self.color = (240, 240, 240)
         self.facing = facing
-        self.speed = 10
+        self.speed = 150
         self.vel = [self.speed * math.cos(self.facing)\
-                   ,self.speed * math.sin(self.facing)]
-        self.l = 20
+                  , self.speed * math.sin(self.facing)]
+        self.l = 30
         self.start_pos = [self.x, self.y]
-        self.end_pos = [self.x+self.vel[0], self.y+self.vel[1]]
+        self.end_pos = [self.x+self.l * math.cos(self.facing)\
+                      , self.y + self.l * math.sin(self.facing)]
 
     def draw(self, window):
         # line(surface, color, start_pos, end_pos, width) -> Rect
@@ -155,7 +157,8 @@ class Bullet(pygame.sprite.Sprite):
         self.start_pos[1] += self.vel[1]
         self.end_pos[0] += self.vel[0]
         self.end_pos[1] += self.vel[1]
-        
+
+
 class Gun(pygame.sprite.Sprite):
     def __init__(self, name, x, y, w, h, gun_image, hit):
         super().__init__()
