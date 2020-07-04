@@ -83,15 +83,20 @@ class Player(pygame.sprite.Sprite):
             self.middleX = self.x+self.w//2
 
     def draw(self, screen):
+        #血條
         pygame.draw.rect(screen, RED,
                          (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
         pygame.draw.rect(screen, GREEN,
                          (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, self.life, 5))
+        #
 
+        #人物隨滑鼠旋轉
         self.facing = self.calFacing()
         rotate_image=pygame.transform.rotate(self.image, -self.facing*180/math.pi)
         self.rect=rotate_image.get_rect(center=(self.rect.centerx,self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
+        #
+
         
 
 
@@ -123,15 +128,11 @@ class Player(pygame.sprite.Sprite):
                                   round(self.y+self.h//2),
                                   self.facing))
 
-    def calFacing(self):
+    def calFacing(self):#算人物面向的角度
         theta = 0
         pos = pygame.mouse.get_pos()
         deltaY = (pos[1] - self.middleY)
         deltaX = (pos[0] - self.middleX)
-<<<<<<< HEAD
-        #print(deltaX,deltaY)
-=======
->>>>>>> 20daef70b4ece473ffebc215309a6a2dde974de8
         if deltaX == 0 and deltaY > 0:
             return math.pi/2
         elif deltaX == 0 and deltaY < 0:
@@ -140,10 +141,6 @@ class Player(pygame.sprite.Sprite):
         theta = math.atan(deltaY/deltaX)
         if deltaX < 0:
             theta += math.pi
-<<<<<<< HEAD
-        #print(theta)
-=======
->>>>>>> 20daef70b4ece473ffebc215309a6a2dde974de8
         return theta
 
 
