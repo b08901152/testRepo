@@ -19,8 +19,10 @@ def bulletsHandle(bullets):
         bullet.y += bullet.vel[1]
 
 
-def drawScreen(screen, player1, player2, background, bullets1, bullets2):
+def drawScreen(screen, player1, player2, background, bullets1, bullets2, all_weapons):
     player1.draw(screen)
+    for weapon in all_weapons:
+        weapon.draw(screen)
     # player2.draw(screen)
 
     pygame.display.flip()
@@ -57,6 +59,8 @@ class Player(pygame.sprite.Sprite):
         self.facing = 0
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
+        self.weapon = []
+        
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -92,29 +96,28 @@ class Player(pygame.sprite.Sprite):
 
         #人物隨滑鼠旋轉
         self.facing = self.calFacing()
-        rotate_image=pygame.transform.rotate(self.image, -self.facing*180/math.pi)
-        self.rect=rotate_image.get_rect(center=(self.rect.centerx,self.rect.centery))
+        rotate_image = pygame.transform.rotate(
+            self.image, -self.facing*180/math.pi)
+        self.rect = rotate_image.get_rect(
+            center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
-        #
-
-        
-
-
-    def moveHandleP1(self, keys, bullets):
-        if keys[pygame.K_LEFT]:
-            self.moveLeft()
-        if keys[pygame.K_RIGHT]:
-            self.moveRight()
-        if keys[pygame.K_UP]:
-            self.moveUp()
-        if keys[pygame.K_DOWN]:
-            self.moveDown()
-        if keys[pygame.K_SPACE]:
-            bullets.append(Bullet(round(self.rect.x+self.w//2),
-                                  round(self.rect.y+self.h//2),
-                                  self.facing))
-
-    def moveHandleP2(self, keys, bullets):
+    
+    """
+     def moveHandleP1(self, keys, bullets):
+         if keys[pygame.K_LEFT]:
+             self.moveLeft()
+         if keys[pygame.K_RIGHT]:
+             self.moveRight()
+         if keys[pygame.K_UP]:
+             self.moveUp()
+         if keys[pygame.K_DOWN]:
+             self.moveDown()
+         if keys[pygame.K_SPACE]:
+             bullets.append(Bullet(round(self.rect.x+self.w//2),
+                                   round(self.rect.y+self.h//2),
+                                   self.facing))
+    """
+    def moveHandleP2(self, keys):
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
@@ -124,9 +127,9 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_s]:
             self.moveDown()
         if pygame.mouse.get_pressed()[0]:
-            bullets.append(Bullet(round(self.x+self.w//2),
-                                  round(self.y+self.h//2),
-                                  self.facing))
+            for weapon in self.weapon:
+                weapon.attack()
+            
 
     def calFacing(self):#算人物面向的角度
         theta = 0
@@ -137,7 +140,6 @@ class Player(pygame.sprite.Sprite):
             return math.pi/2
         elif deltaX == 0 and deltaY < 0:
             return math.pi*3/2
-
         theta = math.atan(deltaY/deltaX)
         if deltaX < 0:
             theta += math.pi
@@ -152,26 +154,62 @@ class Bullet(pygame.sprite.Sprite):
         self.y = y
         self.color = (240, 240, 240)
         self.facing = facing
-        self.speed = 150
-        self.vel = [self.speed * math.cos(self.facing)\
-                  , self.speed * math.sin(self.facing)]
-        self.l = 30
+        self.speed =  10
+        self.vel = [self.speed *
+                    math.cos(self.facing), self.speed * math.sin(self.facing)]
+        self.l = 10
         self.start_pos = [self.x, self.y]
-        self.end_pos = [self.x+self.l * math.cos(self.facing)\
-                      , self.y + self.l * math.sin(self.facing)]
+        self.end_pos = [
+            self.x+self.l * math.cos(self.facing), self.y + self.l * math.sin(self.facing)]
 
     def draw(self, window):
         # line(surface, color, start_pos, end_pos, width) -> Rect
         pygame.draw.line(window, self.color, self.start_pos, self.end_pos, 1)
         self.start_pos[0] += self.vel[0]
         self.start_pos[1] += self.vel[1]
-        self.end_pos[0] += self.vel[0]
-        self.end_pos[1] += self.vel[1]
+        self.end_pos[0]   += self.vel[0]
+        self.end_pos[1]   += self.vel[1]
 
 
 class Gun(pygame.sprite.Sprite):
-    def __init__(self, name, x, y, w, h, gun_image, hit):
+    def __init__(self, name, x, y, w, h, gun_image, atkPoint,player):
         super().__init__()
+        self.name = name
+        self.image = pygame.transform.scale(gun_image, (int(2*w), int(2*h)))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.max_ammunition = 10   # 彈藥限制
+        self.ammunition = 10       # 現在的彈藥
+        self.shoot_delay = 500     # 兩發子彈的間隔時間
+        self.last_shoot_time = 0
+        self.atkPoint = atkPoint
+        self.player=player
+
+    def update(self):
+            self.rect.centerx = self.player.middleX
+            self.rect.centery = self.player.middleY
+
+
+    def attack(self):    # 攻擊，也就是射新的子彈
+        if (pygame.time.get_ticks() - self.last_shoot_time > self.shoot_delay) and (self.ammunition>0):
+            self.last_shoot_time = pygame.time.get_ticks()
+            self.ammunition-=1
+            self.player.bullets.append(Bullet(round(self.player.middleX),
+                                  round(self.player.middleY),
+                                  self.player.facing))
+            return 
+
+    def draw(self, screen):
+        facing = self.player.calFacing()
+        self.update()
+
+        rotate_image = pygame.transform.rotate(
+            self.image, -facing*180/math.pi)
+        self.rect = rotate_image.get_rect(
+            center=(self.rect.centerx, self.rect.centery))
+        screen.blit(rotate_image, (self.rect.x, self.rect.y))
+
 
 
 class Knife(pygame.sprite.Sprite):

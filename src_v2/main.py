@@ -9,11 +9,19 @@ pygame.display.set_caption("Twilight War")
 clock = pygame.time.Clock()
 background = pygame.image.load("../lib/image/map.png")
 background = pygame.transform.scale(background, (SCREENWIDTH, SCREENHEIGHT))
-
+weaponImage = pygame.image.load("../lib/image/gun.png")
 
 player1, player2 = createCharacter()
-bullets1 = []
-bullets2 = []
+
+gun=Gun('normal', player1.rect.x, player1.rect.y, 15, 15, weaponImage,10,player1)
+all_weapons =  []
+
+player1.weapon.append(gun)
+all_weapons.append(gun)
+
+player1.bullets = []
+player2.bullets = []
+
 running = True
 while running:
     clock.tick(FPS)
@@ -23,12 +31,12 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-    player1.moveHandleP2(keys, bullets1)
-    # player2.moveHandleP2(keys, bullets2)
+    player1.moveHandleP2(keys)
+    # player2.moveHandleP2(keys, player2.bullets)
 
-    bulletsHandle(bullets1)
-    bulletsHandle(bullets2)
+    bulletsHandle(player1.bullets)
+    bulletsHandle(player2.bullets)
 
-    drawScreen(screen, player1, None, background, bullets1, bullets2)
+    drawScreen(screen, player1, None, background, player1.bullets, player2.bullets, all_weapons)
 
 pygame.quit()
