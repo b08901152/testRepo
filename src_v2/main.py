@@ -14,6 +14,9 @@ weaponImage = pygame.image.load("../lib/image/gun.png")
 player1, player2 = createCharacter()
 weapons = []
 weapons.append(Gun('normal', player1.rect.x, player1.rect.y, 15, 15, weaponImage, 10))
+weapons.append(Gun('normal', player1.rect.x+100,
+                   player1.rect.y+100, 15, 15, weaponImage, 10))
+
 bullets1 = []
 bullets2 = []
 running = True
