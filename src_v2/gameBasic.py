@@ -19,17 +19,17 @@ def bulletsHandle(bullets):
         bullet.y += bullet.vel[1]
 
 
-def drawScreen(screen, player1, player2, background, bullets1, bullets2, weapon):
+def drawScreen(screen, player1, player2, background, bullets1, bullets2, weapons):
     player1.draw(screen)
-    weapon.draw(screen, player1)
+    for weapon in weapons:
+        weapon.draw(screen, player1)
     # player2.draw(screen)
 
     pygame.display.flip()
     screen.blit(background, (0, 0))
     for bullet in bullets1:
         bullet.draw(screen)
-    for bullet in bullets2:
-        bullet.draw(screen)
+
 
 
 def createCharacter():
@@ -58,7 +58,7 @@ class Player(pygame.sprite.Sprite):
         self.facing = 0
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
-        self.weapon = []
+        self.weapons = []
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -83,6 +83,12 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.speed[0]
             self.x += self.speed[0]
             self.middleX = self.x+self.w//2
+            
+    def pickUpWeapon(self,weapons):
+        for weapon in weapons:
+            if pygame.sprite.collide_rect(weapon, self):
+                weapon.is_taken = True
+                self.weapons.append(weapon)
 
     def draw(self, screen):
         pygame.draw.rect(screen, RED,
@@ -97,21 +103,8 @@ class Player(pygame.sprite.Sprite):
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
 
-    # def moveHandleP1(self, keys, bullets):
-    #     if keys[pygame.K_LEFT]:
-    #         self.moveLeft()
-    #     if keys[pygame.K_RIGHT]:
-    #         self.moveRight()
-    #     if keys[pygame.K_UP]:
-    #         self.moveUp()
-    #     if keys[pygame.K_DOWN]:
-    #         self.moveDown()
-    #     if keys[pygame.K_SPACE]:
-    #         bullets.append(Bullet(round(self.rect.x+self.w//2),
-    #                               round(self.rect.y+self.h//2),
-    #                               self.facing))
 
-    def moveHandleP2(self, keys, bullets):
+    def moveHandleP2(self, keys, bullets, weapons):
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
@@ -120,6 +113,8 @@ class Player(pygame.sprite.Sprite):
             self.moveUp()
         if keys[pygame.K_s]:
             self.moveDown()
+        if keys[pygame.K_SPACE]:
+            self.pickUpWeapon(weapons)
         if pygame.mouse.get_pressed()[0]:
             bullets.append(Bullet(round(self.x+self.w//2),
                                   round(self.y+self.h//2),
@@ -179,12 +174,13 @@ class Gun(pygame.sprite.Sprite):
         self.shoot_delay = 500  # 兩發子彈的間隔時間
         self.last_shoot_time = 0
         self.atkPoint = atkPoint
+        self.is_taken = False
 
     def update(self, player):
-            self.rect.centerx = player.middleX
-            self.rect.centery = player.middleY
-            self.rect.x = player.x
-            self.rect.y = player.y
+        self.rect.centerx = player.middleX
+        self.rect.centery = player.middleY
+        self.rect.x = player.x
+        self.rect.y = player.y
 
 
     def new_bullet(self, position):
@@ -193,11 +189,14 @@ class Gun(pygame.sprite.Sprite):
             return Bullet(position)
 
     def draw(self, screen,player):
-        facing = player.calFacing()
-        self.update(player)
-        rotate_image = pygame.transform.rotate(
-            self.image, - facing*180/math.pi)
-        screen.blit(rotate_image, (self.rect.x, self.rect.y))
+        if not self.is_taken:
+            screen.blit(self.image, (self.rect.x, self.rect.y))
+        else: 
+            facing = player.calFacing()
+            self.update(player)
+            rotate_image = pygame.transform.rotate(
+                self.image, - facing*180/math.pi)
+            screen.blit(rotate_image, (self.rect.x, self.rect.y))
 
 
 class Knife(pygame.sprite.Sprite):
