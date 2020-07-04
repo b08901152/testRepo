@@ -29,8 +29,7 @@ def drawScreen(screen, player1, player2, background, bullets1, bullets2, all_wea
     screen.blit(background, (0, 0))
     for bullet in bullets1:
         bullet.draw(screen)
-    for bullet in bullets2:
-        bullet.draw(screen)
+
 
 
 def createCharacter():
@@ -59,8 +58,7 @@ class Player(pygame.sprite.Sprite):
         self.facing = 0
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
-        self.weapon = []
-        
+        self.weapons = []
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -85,6 +83,12 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.speed[0]
             self.x += self.speed[0]
             self.middleX = self.x+self.w//2
+            
+    def pickUpWeapon(self,weapons):
+        for weapon in weapons:
+            if pygame.sprite.collide_rect(weapon, self):
+                weapon.is_taken = True
+                self.weapons.append(weapon)
 
     def draw(self, screen):
         #血條
@@ -126,8 +130,10 @@ class Player(pygame.sprite.Sprite):
             self.moveUp()
         if keys[pygame.K_s]:
             self.moveDown()
+        if keys[pygame.K_SPACE]:
+            self.pickUpWeapon(weapons)
         if pygame.mouse.get_pressed()[0]:
-            for weapon in self.weapon:
+            for weapon in self.weapons:
                 weapon.attack()
             
 
@@ -189,6 +195,8 @@ class Gun(pygame.sprite.Sprite):
     def update(self):
             self.rect.centerx = self.player.middleX
             self.rect.centery = self.player.middleY
+            
+
 
 
     def attack(self):    # 攻擊，也就是射新的子彈
@@ -209,6 +217,7 @@ class Gun(pygame.sprite.Sprite):
         self.rect = rotate_image.get_rect(
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
+    
 
 
 

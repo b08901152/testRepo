@@ -16,7 +16,7 @@ player1, player2 = createCharacter()
 gun=Gun('normal', player1.rect.x, player1.rect.y, 15, 15, weaponImage,10,player1)
 all_weapons =  []
 
-player1.weapon.append(gun)
+player1.weapons.append(gun)
 all_weapons.append(gun)
 
 player1.bullets = []
