@@ -169,15 +169,15 @@ class Player(pygame.sprite.Sprite):
 
 
 class Gun(pygame.sprite.Sprite):
-    def __init__(self, name, x, y, w, h, gun_image, atkPoint, player, shoot_delay, isTaken):
+    def __init__(self, name, x, y, w, h, gun_image, max_ammunition, atkPoint, player, shoot_delay, isTaken):
         super().__init__()
         self.name = name
         self.image = pygame.transform.scale(gun_image, (int(2*w), int(2*h)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.max_ammunition = 10   # 彈藥限制
-        self.ammunition = 10       # 現在的彈藥
+        self.max_ammunition = max_ammunition   # 彈藥限制
+        self.ammunition = max_ammunition       # 現在的彈藥
         self.shoot_delay = shoot_delay     # 兩發子彈的間隔時間
         self.last_shoot_time = 0
         self.atkPoint = atkPoint
@@ -245,7 +245,7 @@ class Bullet(pygame.sprite.Sprite):
     def hit(self,player):
         if pygame.sprite.collide_rect(player, self):
             player.life -= self.atkPoint
-
+            pygame.time.delay(100)
 
 
 class Knife(pygame.sprite.Sprite):
