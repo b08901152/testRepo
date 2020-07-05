@@ -15,17 +15,24 @@ weaponImage = pygame.image.load("../lib/image/gun.png")
 
 
 player1, player2 = createCharacter()
-weapons = []
-weapons.append(Gun('normal', player1.rect.x,
-                   player1.rect.y, 15, 15, weaponImage, 10))
-weapons.append(Gun('normal', player1.rect.x+100,
-                   player1.rect.y+100, 30, 30, weaponImage2, 10))
-weapons.append(Gun('normal', player1.rect.x+300,
-                   player1.rect.y+300, 30, 30, weaponImage3, 10))
-weapons.append(Gun('normal', player1.rect.x+200,
-                   player1.rect.y+200, 30, 30, weaponImage3, 10))
-bullets1 = []
-bullets2 = []
+
+
+gun1 = Gun('1', player1.rect.x, player1.rect.y,
+           15, 15, weaponImage, 10, player1, isTaken=False)
+gun2 = Gun('2', player1.rect.x+100, player1.rect.y+100,
+           15, 15, weaponImage2, 10, player1, isTaken=False)
+gun3 = Gun('3', player1.rect.x+200, player1.rect.y+200,
+           15, 15, weaponImage3, 10, player1, isTaken=False)
+all_weapons = []
+
+all_weapons.append(gun1)
+all_weapons.append(gun2)
+all_weapons.append(gun3)
+
+
+player1.bullets = []
+player2.bullets = []
+
 running = True
 while running:
     clock.tick(FPS)
@@ -35,11 +42,15 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-    player1.moveHandleP2(keys, bullets1, weapons)
-    # player2.moveHandleP2(keys, bullets2)
+    player1.moveHandleP2(keys, all_weapons)
+    # player2.moveHandleP2(keys, player2.bullets)
+    for weapon in all_weapons:
+        print(weapon.isTaken,end = " ")
+    print()
+    bulletsHandle(player1.bullets)
+    bulletsHandle(player2.bullets)
 
-    bulletsHandle(bullets1)
-
-    drawScreen(screen, player1, None, background, bullets1, None, weapons)
+    drawScreen(screen, player1, None, background,
+               player1.bullets, player2.bullets, all_weapons)
 
 pygame.quit()
