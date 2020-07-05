@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
         self.weapons = []
+        
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -88,7 +89,11 @@ class Player(pygame.sprite.Sprite):
         for weapon in weapons:
             if pygame.sprite.collide_rect(weapon, self):
                 weapon.is_taken = True
-                self.weapons.append(weapon)
+                self.weapons.insert(0,weapon)
+                
+    def changeWeapon(self):
+        # if(len)
+        pass
 
     def draw(self, screen):
         pygame.draw.rect(screen, RED,
@@ -115,6 +120,8 @@ class Player(pygame.sprite.Sprite):
             self.moveDown()
         if keys[pygame.K_SPACE]:
             self.pickUpWeapon(weapons)
+        if keys[pygame.K_s]:
+            self.changeWeapon()
         if pygame.mouse.get_pressed()[0]:
             bullets.append(Bullet(round(self.x+self.w//2),
                                   round(self.y+self.h//2),
