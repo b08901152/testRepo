@@ -13,23 +13,30 @@ SCREENHEIGHT = 700
 FPS = 40
 
 
-def bulletsHandle(bullets,player):
+def bulletsHandle(bullets, player):
     for bullet in bullets:
-            bullet.x += bullet.vel[0]
-            bullet.y += bullet.vel[1]
-            bullet.hit(player)
+        bullet.x += bullet.vel[0]
+        bullet.y += bullet.vel[1]
+        bullet.hit(player)
 
 
-def drawScreen(screen, player1, player2, background, bullets1, bullets2, all_weapons):
+def drawScreen(screen, player1, player2, background, bullets1, bullets2, all_weapons, clips,grasses,hides):
+    pygame.display.flip()
+    screen.blit(background, (0, 0))
+
     player1.draw(screen)
     for weapon in all_weapons:
         weapon.draw(screen)
     player2.draw(screen)
 
-    pygame.display.flip()
-    screen.blit(background, (0, 0))
     for bullet in bullets1:
         bullet.draw(screen)
+    for clip in clips:
+        clip.draw(screen)
+    for grass in grasses:
+        grass.draw(screen)
+    for hide in hides:
+        hide.draw(screen)
 
 
 def createCharacter():
@@ -88,14 +95,21 @@ class Player(pygame.sprite.Sprite):
         for weapon in weapons:
             if not weapon.isTaken and pygame.sprite.collide_rect(weapon, self):
                 weapon.isTaken = True
-                #如果玩家武器數小於2 直接append到self
+                # 如果玩家武器數小於2 直接append到self
                 if len(self.weapons) < 2:
                     self.weapons.append(weapon)
-                #如果玩家武器數等於2 退掉第一個 再加新的一個
+                # 如果玩家武器數等於2 退掉第一個 再加新的一個
                 else:
                     garbage = self.weapons.pop(0)
                     garbage.isTaken = False
                     self.weapons.append(weapon)
+        pygame.time.delay(100)
+
+    def pickUpClips(self, clips):
+        for clip in clips:
+            if not clip.isTaken and pygame.sprite.collide_rect(clip, self):
+                clip.isTaken = True
+                self.weapons[0].ammunition+=10
         pygame.time.delay(100)
 
     def changeWeapon(self):
@@ -106,12 +120,12 @@ class Player(pygame.sprite.Sprite):
         # 血條
         if self.life > 0:
             pygame.draw.rect(screen, RED,
-                            (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
+                             (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
             pygame.draw.rect(screen, GREEN,
-                            (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, self.life, 5))
-        else:    
-            pygame.draw.rect(screen, RED,\
-                 (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
+                             (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, self.life, 5))
+        else:
+            pygame.draw.rect(screen, RED,
+                             (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
         # 人物隨滑鼠旋轉
         self.facing = self.calFacing()
         rotate_image = pygame.transform.rotate(
@@ -136,7 +150,7 @@ class Player(pygame.sprite.Sprite):
                                    self.facing))
     """
 
-    def moveHandleP2(self, keys,allWeapons):
+    def moveHandleP2(self, keys, allWeapons, clips):
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
@@ -147,6 +161,7 @@ class Player(pygame.sprite.Sprite):
             self.moveDown()
         if keys[pygame.K_SPACE]:
             self.pickUpWeapon(allWeapons)
+            self.pickUpClips(clips)
         if keys[pygame.K_r]:
             self.changeWeapon()
         if pygame.mouse.get_pressed()[0]:
@@ -212,6 +227,7 @@ class Gun(pygame.sprite.Sprite):
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
 
+
 class Bullet(pygame.sprite.Sprite):
 
     def __init__(self, x, y, facing, atkPoint):
@@ -241,8 +257,8 @@ class Bullet(pygame.sprite.Sprite):
         self.end_pos[1] += self.vel[1]
         self.rect.x += self.vel[0]
         self.rect.y += self.vel[1]
-        
-    def hit(self,player):
+
+    def hit(self, player):
         if pygame.sprite.collide_rect(player, self):
             player.life -= self.atkPoint
             pygame.time.delay(100)
@@ -256,13 +272,31 @@ class Knife(pygame.sprite.Sprite):
 
 class Clip(pygame.sprite.Sprite):
 
-    def __init__(self, position):
+    def __init__(self, image, position):
         super().__init__()
+        self.image = pygame.transform.scale(image, (30, 30))
+        self.rect = self.image.get_rect()
+        self.rect.x = position[0]
+        self.rect.y = position[1]
+        self.isTaken = False
+ 
+
+    def draw(self, screen):
+        if not self.isTaken:
+            screen.blit(self.image, (self.rect.x, self.rect.y))
+            return
 
 
 class Grass(pygame.sprite.Sprite):
-    def __init__(self, x, y, w, h, speed=(0, 0)):
+    def __init__(self,image,position):
         super().__init__()
+        self.image = pygame.transform.scale(image, (300, 150))
+        self.rect = self.image.get_rect()
+        self.rect.x = position[0]
+        self.rect.y = position[1]
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+        return
 
 
 class Hide(pygame.sprite.Sprite):

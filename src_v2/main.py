@@ -12,7 +12,9 @@ background = pygame.transform.scale(background, (SCREENWIDTH, SCREENHEIGHT))
 weaponImage2 = pygame.image.load("../lib/image/machine_gun.png")
 weaponImage3 = pygame.image.load("../lib/image/knife.png")
 weaponImage = pygame.image.load("../lib/image/gun.png")
-
+clipImg = pygame.image.load("../lib/image/clip.png")
+grassImg = pygame.image.load("../lib/image/grass.png")
+hideImg = pygame.image.load("../lib/image/hide.png")
 
 player1, player2 = createCharacter()
 
@@ -23,12 +25,16 @@ gun2 = Gun('2', player1.rect.x+100, player1.rect.y+100,
            15, 15, weaponImage2,30, 5, player1, shoot_delay=300, isTaken=False)
 gun3 = Gun('3', player1.rect.x+200, player1.rect.y+200,
            15, 15, weaponImage3,5, 50, player1, shoot_delay=3000, isTaken=False)
+clips = []
+clips.append(Clip(clipImg,(300,150)))
 all_weapons = []
-
 all_weapons.append(gun1)
 all_weapons.append(gun2)
 all_weapons.append(gun3)
-
+grasses = []
+grasses.append(Grass(grassImg,(300,500)))
+hides = []
+hides.append(Grass(hideImg,(200,100)))
 
 player1.bullets = []
 player2.bullets = []
@@ -42,15 +48,13 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-    player1.moveHandleP2(keys, all_weapons)
+    player1.moveHandleP2(keys, all_weapons,clips)
     # player2.moveHandleP2(keys, player2.bullets)
-    for weapon in all_weapons:
-        print(weapon.isTaken, end=" ")
-    print()
+    
     bulletsHandle(player1.bullets,player2)
     bulletsHandle(player2.bullets,player1)
 
     drawScreen(screen, player1, player2, background,
-               player1.bullets, player2.bullets, all_weapons)
+               player1.bullets, player2.bullets, all_weapons,clips,grasses,hides)
 
 pygame.quit()
