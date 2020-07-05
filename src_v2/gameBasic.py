@@ -87,8 +87,10 @@ class Player(pygame.sprite.Sprite):
         for weapon in weapons:
             if not weapon.isTaken and pygame.sprite.collide_rect(weapon, self):
                 weapon.isTaken = True
+                #如果玩家武器數小於2 直接append到self
                 if len(self.weapons) < 2:
                     self.weapons.append(weapon)
+                #如果玩家武器數等於2 退掉第一個 再加新的一個
                 else:
                     garbage = self.weapons.pop(0)
                     garbage.isTaken = False
