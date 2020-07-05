@@ -66,6 +66,8 @@ class Player(pygame.sprite.Sprite):
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
         self.weapons = []
+        self.can_pick=True
+        self.present_weapon = None
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -92,18 +94,25 @@ class Player(pygame.sprite.Sprite):
             self.middleX = self.x+self.w//2
 
     def pickUpWeapon(self, weapons):
+        pick_count=0
         for weapon in weapons:
-            if not weapon.isTaken and pygame.sprite.collide_rect(weapon, self):
+            if not weapon.isTaken and pygame.sprite.collide_rect(weapon, self) and pick_count==0:
                 weapon.isTaken = True
                 # 如果玩家武器數小於2 直接append到self
                 if len(self.weapons) < 2:
                     self.weapons.append(weapon)
-                # 如果玩家武器數等於2 退掉第一個 再加新的一個
-                else:
-                    garbage = self.weapons.pop(0)
-                    garbage.isTaken = False
+
+                    self.present_weapon = weapon
+                    pick_count=1
+                #如果玩家武器數等於2 退掉第一個 再加新的一個
+                elif len(self.weapons)==2 :
+                    self.present_weapon.isTaken = False
+                    self.weapons.remove(self.present_weapon)
                     self.weapons.append(weapon)
-        pygame.time.delay(100)
+                    self.present_weapon = weapon
+                    pick_count=1
+            
+        
 
     def pickUpClips(self, clips):
         for clip in clips:
@@ -159,10 +168,17 @@ class Player(pygame.sprite.Sprite):
             self.moveUp()
         if keys[pygame.K_s]:
             self.moveDown()
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and self.can_pick==True:
             self.pickUpWeapon(allWeapons)
+# <<<<<<< HEAD
             self.pickUpClips(clips)
         if keys[pygame.K_r]:
+# =======
+#             self.can_pick=False
+#         if not keys[pygame.K_SPACE] and self.can_pick==False:
+#             self.can_pick=True
+#         if keys[pygame.K_s]:
+# >>>>>>> e82948477d5767465d71406e7d10755f26c7f7f7
             self.changeWeapon()
         if pygame.mouse.get_pressed()[0]:
             for weapon in self.weapons:
