@@ -44,9 +44,6 @@ while running:
 
     player1.moveHandleP2(keys, all_weapons)
     # player2.moveHandleP2(keys, player2.bullets)
-    for weapon in all_weapons:
-        print(weapon.isTaken,end = " ")
-    print()
     bulletsHandle(player1.bullets)
     bulletsHandle(player2.bullets)
 
