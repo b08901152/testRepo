@@ -44,8 +44,8 @@ while running:
 
     player1.moveHandleP2(keys, all_weapons)
     # player2.moveHandleP2(keys, player2.bullets)
-    bulletsHandle(player1.bullets)
-    bulletsHandle(player2.bullets)
+    bulletsHandle(player1.bullets,player1)
+    bulletsHandle(player2.bullets,player2)
 
     drawScreen(screen, player1, player2, background,
                player1.bullets, player2.bullets, all_weapons)

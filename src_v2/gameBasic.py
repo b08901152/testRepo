@@ -101,14 +101,10 @@ class Player(pygame.sprite.Sprite):
                     self.present_weapon.isTaken = False
                     self.weapons.remove(self.present_weapon)
                     self.weapons.append(weapon)
-<<<<<<< HEAD
                     self.present_weapon = weapon
                     pick_count=1
             
         
-=======
-        pygame.time.delay(100)
->>>>>>> fc4f69b7451069d21757673c9df7a0b2682359aa
 
     def changeWeapon(self):
         if len(self.weapons) == 2:
@@ -159,14 +155,10 @@ class Player(pygame.sprite.Sprite):
             self.moveDown()
         if keys[pygame.K_SPACE] and self.can_pick==True:
             self.pickUpWeapon(allWeapons)
-<<<<<<< HEAD
             self.can_pick=False
         if not keys[pygame.K_SPACE] and self.can_pick==False:
             self.can_pick=True
         if keys[pygame.K_s]:
-=======
-        if keys[pygame.K_r]:
->>>>>>> fc4f69b7451069d21757673c9df7a0b2682359aa
             self.changeWeapon()
         if pygame.mouse.get_pressed()[0]:
             for weapon in self.weapons:
