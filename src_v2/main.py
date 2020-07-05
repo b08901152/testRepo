@@ -18,11 +18,11 @@ player1, player2 = createCharacter()
 
 
 gun1 = Gun('1', player1.rect.x, player1.rect.y,
-           15, 15, weaponImage, 10, player1, isTaken=False)
+           15, 15, weaponImage, 10, player1, shoot_delay=1000, isTaken=False)
 gun2 = Gun('2', player1.rect.x+100, player1.rect.y+100,
-           15, 15, weaponImage2, 10, player1, isTaken=False)
+           15, 15, weaponImage2, 10, player1, shoot_delay=300, isTaken=False)
 gun3 = Gun('3', player1.rect.x+200, player1.rect.y+200,
-           15, 15, weaponImage3, 10, player1, isTaken=False)
+           15, 15, weaponImage3, 50, player1, shoot_delay=2000, isTaken=False)
 all_weapons = []
 
 all_weapons.append(gun1)
@@ -45,12 +45,12 @@ while running:
     player1.moveHandleP2(keys, all_weapons)
     # player2.moveHandleP2(keys, player2.bullets)
     for weapon in all_weapons:
-        print(weapon.isTaken,end = " ")
+        print(weapon.isTaken, end=" ")
     print()
-    bulletsHandle(player1.bullets)
-    bulletsHandle(player2.bullets)
+    bulletsHandle(player1.bullets,player2)
+    bulletsHandle(player2.bullets,player1)
 
-    drawScreen(screen, player1, None, background,
+    drawScreen(screen, player1, player2, background,
                player1.bullets, player2.bullets, all_weapons)
 
 pygame.quit()
