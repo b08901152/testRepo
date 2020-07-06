@@ -7,7 +7,6 @@ import pygame
 pygame.init()
 screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 
-
 server = "172.20.10.3"
 port = 11111
 

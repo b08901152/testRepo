@@ -53,14 +53,14 @@ while running:
     p2 = n.send(p)
     keys = pygame.key.get_pressed()
 
-# <<<<<<< HEAD
-#     player1.moveHandleP2(keys, all_weapons,clips)
-#     if player1.hiding(hides) ==True:
-#         hides = []
-#         hides.append(Hide(hideImg2,(200,400)))
-#     elif player1.hiding(hides) ==False:
-#         hides = []
-#         hides.append(Hide(hideImg,(200,400)))
+
+    p.moveHandleP2(keys, all_weapons,clips)
+    if p.hiding(hides) ==True:
+        hides = []
+        hides.append(Hide(hideImg2,(200,400)))
+    elif p.hiding(hides) ==False:
+        hides = []
+        hides.append(Hide(hideImg,(200,400)))
 
 # =======
     p.moveHandleP2(keys, all_weapons,clips)
