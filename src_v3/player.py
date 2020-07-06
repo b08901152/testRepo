@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.w = w
         self.h = h
         image = pygame.transform.scale(image, (int(w), int(h)))
-        self.imgString = pygame.image.tostring(image, "RGB")
+        self.imgString = pygame.image.tostring(image, "RGBA")
         self.rect = pygame.rect.Rect(x, y, w, h)
         self.speed = speed
         self.life = 70
@@ -105,30 +105,14 @@ class Player(pygame.sprite.Sprite):
         # 人物隨滑鼠旋轉
         self.facing = self.calFacing()
         image = pygame.image.fromstring(
-            self.imgString, (self.w, self.h), "RGB")
+            self.imgString, (self.w, self.h), "RGBA")
         rotate_image = pygame.transform.rotate(
             image, -self.facing*180/math.pi)
         self.rect = rotate_image.get_rect(
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
-
-    """
-     def moveHandleP1(self, keys, bullets):
-         if keys[pygame.K_LEFT]:
-             self.moveLeft()
-         if keys[pygame.K_RIGHT]:
-             self.moveRight()
-         if keys[pygame.K_UP]:
-             self.moveUp()
-         if keys[pygame.K_DOWN]:
-             self.moveDown()
-         if keys[pygame.K_SPACE]:
-             bullets.append(Bullet(round(self.rect.x+self.w//2),
-                                   round(self.rect.y+self.h//2),
-                                   self.facing))
-    """
-
-    def moveHandleP2(self, keys):
+        
+    def moveHandle(self, keys):
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
