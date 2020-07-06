@@ -2,6 +2,7 @@ import pygame
 import random
 from gameBasic import *
 
+
 pygame.init()
 pygame.mixer.init()
 screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
@@ -15,6 +16,7 @@ weaponImage = pygame.image.load("../lib/image/gun.png")
 clipImg = pygame.image.load("../lib/image/clip.png")
 grassImg = pygame.image.load("../lib/image/grass.png")
 hideImg = pygame.image.load("../lib/image/hide.png")
+hideImg2 = pygame.image.load("../lib/image/hide2.png")
 
 player1, player2 = createCharacter()
 
@@ -34,7 +36,9 @@ all_weapons.append(gun3)
 grasses = []
 grasses.append(Grass(grassImg,(300,500)))
 hides = []
-hides.append(Grass(hideImg,(200,100)))
+hides.append(Hide(hideImg,(200,400)))
+
+
 
 player1.bullets = []
 player2.bullets = []
@@ -49,6 +53,13 @@ while running:
     keys = pygame.key.get_pressed()
 
     player1.moveHandleP2(keys, all_weapons,clips)
+    if player1.hiding(hides) ==True:
+        hides = []
+        hides.append(Hide(hideImg2,(200,400)))
+    elif player1.hiding(hides) ==False:
+        hides = []
+        hides.append(Hide(hideImg,(200,400)))
+
     # player2.moveHandleP2(keys, player2.bullets)    
     bulletsHandle(player1.bullets,player2)
     bulletsHandle(player2.bullets,player1)
