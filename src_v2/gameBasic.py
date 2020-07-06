@@ -1,6 +1,7 @@
 import pygame
 import math
 
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -20,13 +21,12 @@ def bulletsHandle(bullets, player):
         bullet.hit(player)
 
 
-def drawScreen(screen, player1, player2, background, bullets1, bullets2, all_weapons, clips,grasses,hides):
+def drawScreen(screen, player1, player2, background, bullets1, bullets2, gun_sprites, clips, grasses, hides):
     pygame.display.flip()
     screen.blit(background, (0, 0))
 
     player1.draw(screen)
-    for weapon in all_weapons:
-        weapon.draw(screen)
+    gun_sprites.draw(screen)
     player2.draw(screen)
 
     for bullet in bullets1:
@@ -121,6 +121,13 @@ class Player(pygame.sprite.Sprite):
                 clip.isTaken = True
                 self.weapons[0].ammunition+=10
         pygame.time.delay(100)
+    def hiding(self, hides):
+        for hide in hides:
+            if not hide.isTaken and pygame.sprite.collide_rect(hide, self):
+                hide.isTaken = True
+            else:
+                hide.isTaken = False
+        return hide.isTaken
 
     def changeWeapon(self):
         if len(self.weapons) == 2:
@@ -319,5 +326,13 @@ class Grass(pygame.sprite.Sprite):
 
 
 class Hide(pygame.sprite.Sprite):
-    def __init__(self, x, y, w, h, speed=(0, 0)):
+    def __init__(self,image,position):
         super().__init__()
+        self.image = pygame.transform.scale(image, (300, 150))
+        self.rect = self.image.get_rect()
+        self.rect.x = position[0]
+        self.rect.y = position[1]
+        self.isTaken = False
+    def draw(self, screen):
+        screen.blit(self.image, (self.rect.x, self.rect.y))
+

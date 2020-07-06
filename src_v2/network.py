@@ -15,10 +15,10 @@ class Network:
 
     def connect(self):
         self.client.connect(self.addr)
-        return pickle.loads(self.client.recv(2048*1024))
+        return pickle.loads(self.client.recv(2048*10240))
        
 
     def send(self, data):
         self.client.send(pickle.dumps(data))
-        return pickle.loads(self.client.recv(2048*1024))
+        return pickle.loads(self.client.recv(2048*10240))
        

@@ -3,7 +3,7 @@ from _thread import *
 import sys
 
 server = "172.20.10.4"
-port = 11111
+port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -21,7 +21,7 @@ def threaded_client(conn,currentPlayer):
     reply = ""
     while True:
        
-        data = conn.recv(2048)
+        data = conn.recv(2048*4096)
         reply = data.decode("utf-8")
         text[currentPlayer] = reply
             
