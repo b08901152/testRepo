@@ -8,8 +8,8 @@ pygame.init()
 screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 
 
-server = "172.20.10.5"
-port = 5555
+server = "172.20.10.4"
+port = 63675
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
