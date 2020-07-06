@@ -2,8 +2,8 @@ import socket
 from _thread import *
 import sys
 
-server = "IPV4 ADDRESS HERE"
-port = 5555
+server = "172.20.10.4"
+port = 11111
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -15,32 +15,34 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection, Server Started")
 
-
-def threaded_client(conn):
+text = ["",""]
+def threaded_client(conn,currentPlayer):
     conn.send(str.encode("Connected"))
     reply = ""
     while True:
-        try:
-            data = conn.recv(2048)
-            reply = data.decode("utf-8")
-
-            if not data:
-                print("Disconnected")
-                break
-            else:
-                print("Received: ", reply)
-                print("Sending : ", reply)
-
-            conn.sendall(str.encode(reply))
-        except:
-            break
+       
+        data = conn.recv(2048)
+        reply = data.decode("utf-8")
+        text[currentPlayer] = reply
+            
+        if currentPlayer == 1:
+            reply = text[1]
+        if currentPlayer == 2:
+            reply = text[0]
+        print("Received: ", data)
+        print("Sending : ", reply)
+        conn.sendall(str.encode(reply))
+        conn.close()
 
     print("Lost connection")
-    conn.close()
 
+
+currentPlayer = 0
 
 while True:
     conn, addr = s.accept()
     print("Connected to:", addr)
 
-    start_new_thread(threaded_client, (conn,))
+    start_new_thread(threaded_client, (conn,currentPlayer))
+    currentPlayer+=1
+    print(currentPlayer)
