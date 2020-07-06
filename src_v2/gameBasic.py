@@ -58,7 +58,8 @@ class Player(pygame.sprite.Sprite):
         self.y = y
         self.w = w
         self.h = h
-        self.image = pygame.transform.scale(image, (int(w), int(h)))
+        image = pygame.transform.scale(image, (int(w), int(h)))
+        self.imgString = pygame.image.tostring(image, "RGB")
         self.rect = pygame.rect.Rect(x, y, w, h)
         self.speed = speed
         self.life = 70
@@ -137,8 +138,10 @@ class Player(pygame.sprite.Sprite):
                              (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
         # 人物隨滑鼠旋轉
         self.facing = self.calFacing()
+        image = pygame.image.fromstring(
+            self.imgString, (self.w, self.h), "RGB")
         rotate_image = pygame.transform.rotate(
-            self.image, -self.facing*180/math.pi)
+            image, -self.facing*180/math.pi)
         self.rect = rotate_image.get_rect(
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))

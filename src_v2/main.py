@@ -1,6 +1,7 @@
 import pygame
 import random
 from gameBasic import *
+from network import Network
 
 pygame.init()
 pygame.mixer.init()
@@ -16,15 +17,13 @@ clipImg = pygame.image.load("../lib/image/clip.png")
 grassImg = pygame.image.load("../lib/image/grass.png")
 hideImg = pygame.image.load("../lib/image/hide.png")
 
-player1, player2 = createCharacter()
-
-
-gun1 = Gun('1', player1.rect.x, player1.rect.y,
-           15, 15, weaponImage,10, 10, player1, shoot_delay=1000, isTaken=False)
-gun2 = Gun('2', player1.rect.x+100, player1.rect.y+100,
-           15, 15, weaponImage2,30, 5, player1, shoot_delay=300, isTaken=False)
-gun3 = Gun('3', player1.rect.x+200, player1.rect.y+200,
-           15, 15, weaponImage3,5, 50, player1, shoot_delay=3000, isTaken=False)
+p1temp, p2temp = createCharacter()
+gun1 = Gun('1', 100, 100,
+           15, 15, weaponImage, 10, 10, p1temp, shoot_delay=1000, isTaken=False)
+gun2 = Gun('2', 100+100, 100+100,
+           15, 15, weaponImage2, 30, 5, p1temp, shoot_delay=300, isTaken=False)
+gun3 = Gun('3', 100+200, 100+200,
+           15, 15, weaponImage3, 5, 50, p1temp, shoot_delay=3000, isTaken=False)
 clips = []
 clips.append(Clip(clipImg,(300,150)))
 all_weapons = []
@@ -36,25 +35,27 @@ grasses.append(Grass(grassImg,(300,500)))
 hides = []
 hides.append(Grass(hideImg,(200,100)))
 
-player1.bullets = []
-player2.bullets = []
 
+
+n = Network()
+p = n.getP()
+p.bullets = []
 running = True
 while running:
     clock.tick(FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+    p2 = n.send(p)
     keys = pygame.key.get_pressed()
 
-    player1.moveHandleP2(keys, all_weapons,clips)
+    p.moveHandleP2(keys, all_weapons,clips)
     # player2.moveHandleP2(keys, player2.bullets)    
-    bulletsHandle(player1.bullets,player2)
-    bulletsHandle(player2.bullets,player1)
+    bulletsHandle(p.bullets,p2)
+    # bulletsHandle(p2.bullets,p)
 
 
-    drawScreen(screen, player1, player2, background,
-               player1.bullets, player2.bullets, all_weapons,clips,grasses,hides)
+    drawScreen(screen, p, p2, background,
+               p.bullets, None, all_weapons,clips,grasses,hides)
 
 pygame.quit()
