@@ -25,12 +25,13 @@ def main():
         clock.tick(60)
         p2 = n.send(p)
 
+        keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
                 pygame.quit()
 
-        
+        p.moveHandleP2(keys)
         redrawWindow(win, p, p2)
 
 

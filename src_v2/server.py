@@ -7,11 +7,10 @@ import pygame
 pygame.init()
 screen = pygame.display.set_mode((SCREENWIDTH, SCREENHEIGHT))
 
-server = "172.20.10.4"
-port = 5555
+server = "172.20.10.5"
+port = 11111
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 s.bind((server, port))
 s.listen(2)
@@ -29,7 +28,7 @@ def threaded_client(conn, player):
     conn.send(pickle.dumps(players[player]))
     reply = ""
     while True:
-        data = pickle.loads(conn.recv(2048*10240))
+        data = pickle.loads(conn.recv(2048*102400))
         players[player] = data
 
         if not data:

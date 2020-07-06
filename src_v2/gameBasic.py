@@ -169,7 +169,7 @@ class Player(pygame.sprite.Sprite):
                                    self.facing))
     """
 
-    def moveHandleP2(self, keys, allWeapons, clips):
+    def moveHandleP2(self, keys):
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
