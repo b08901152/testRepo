@@ -4,7 +4,8 @@ from player import Player
 import pickle
 import pygame
 
-server = "172.20.10.9"
+server = "172.20.10.5"
+
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,7 +25,9 @@ player1 = Player("harry", Image, 200, 200, 64, 64, (10, 10))
 Image2 = pygame.image.load(
     '../lib/image/player2.png')  # player2要用的圖
 player2 = Player("hary", Image2, 200, 200, 64, 64, (10, 10))
-players = [player1,player2]
+players = [player1, player2]
+
+
 
 
 def threaded_client(conn, player):
@@ -62,3 +65,4 @@ while True:
 
     start_new_thread(threaded_client, (conn, currentPlayer))
     currentPlayer += 1
+    currentPlayer %= 2
