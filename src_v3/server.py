@@ -4,7 +4,7 @@ from player import Player
 import pickle
 import pygame
 
-server = "172.20.10.5"
+server = "172.20.10.9"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

@@ -31,6 +31,7 @@ def main():
                 run = False
                 pygame.quit()
 
+
         p.moveHandleP2(keys)
         redrawWindow(win, p, p2)
 
