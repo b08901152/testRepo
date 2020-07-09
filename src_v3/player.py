@@ -51,6 +51,7 @@ class Player(pygame.sprite.Sprite):
         for weapon in weapons:
             if not weapon.isTaken and pygame.sprite.collide_rect(weapon, self) and pick_count == 0:
                 weapon.isTaken = True
+                weapon.player = self
                 # 如果玩家武器數小於2 直接append到self
                 if len(self.weapons) < 2:
                     self.weapons.append(weapon)
@@ -95,7 +96,7 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.rect(screen, RED,
                              (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
         # 人物隨滑鼠旋轉
-        self.facing = self.calFacing()
+        
         image = pygame.image.fromstring(
             self.imgString, (self.w, self.h), "RGBA")
         rotate_image = pygame.transform.rotate(
@@ -145,3 +146,7 @@ class Player(pygame.sprite.Sprite):
         if deltaX < 0:
             theta += math.pi
         return theta
+
+    def update(self):
+        self.facing = self.calFacing()
+        

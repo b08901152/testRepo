@@ -1,5 +1,6 @@
 import random
 import pygame
+import math
 from gamebasic import *
 
 def createGuns(number):

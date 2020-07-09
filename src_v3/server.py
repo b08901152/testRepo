@@ -4,7 +4,7 @@ from player import Player
 import pickle
 import pygame
 
-server = "172.20.10.5"
+server = "140.112.241.16"
 
 port = 5555
 
