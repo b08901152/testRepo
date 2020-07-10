@@ -19,8 +19,13 @@ class Player(pygame.sprite.Sprite):
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
         self.weapons = []
+        self.bullets = []
         self.can_pick = True
         self.present_weapon = None
+        self.keys = None
+        self.mouse_get_pressed = None
+        self.mouse_get_pos = None
+
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -104,8 +109,16 @@ class Player(pygame.sprite.Sprite):
         self.rect = rotate_image.get_rect(
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
-        
-    def moveHandle(self, keys, allWeapons):
+
+        if self.present_weapon :
+            self.present_weapon.draw(screen)
+
+        if self.bullets :
+            for bullet in self.bullets :
+                bullet.draw(screen)
+
+    def moveHandle(self, allWeapons):
+        keys = self.keys
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
@@ -116,7 +129,6 @@ class Player(pygame.sprite.Sprite):
             self.moveDown()
         if keys[pygame.K_SPACE] and self.can_pick == True:
             print("SPACE PRESSED")
-            pass
             self.pickUpWeapon(allWeapons)
             # self.pickUpClips(clips)
         if keys[pygame.K_r]:
@@ -128,14 +140,14 @@ class Player(pygame.sprite.Sprite):
             #         if keys[pygame.K_s]:
             # >>>>>>> e82948477d5767465d71406e7d10755f26c7f7f7
             self.changeWeapon()
-        if pygame.mouse.get_pressed()[0]:
-            print("mouse click")
-            # for weapon in self.weapons:
-            #     weapon.attack()
+        if self.mouse_get_pressed[0] : 
 
+            if self.present_weapon :
+                self.present_weapon.attack()
+            
     def calFacing(self):  # 算人物面向的角度
         theta = 0
-        pos = pygame.mouse.get_pos()
+        pos = self.mouse_get_pos
         deltaY = (pos[1] - self.middleY)
         deltaX = (pos[0] - self.middleX)
         if deltaX == 0 and deltaY > 0:
@@ -148,5 +160,6 @@ class Player(pygame.sprite.Sprite):
         return theta
 
     def update(self):
-        self.facing = self.calFacing()
+        if self.mouse_get_pos :
+            self.facing = self.calFacing()
         
