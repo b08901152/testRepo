@@ -45,7 +45,7 @@ def createGuns(number):
     weaponImage = pygame.image.load("../lib/image/gun.png")
     for i in range(number):
         gun = Gun('i', random.randint(0, SCREENWIDTH),  random.randint(0, SCREENHEIGHT),
-                15, 15, weaponImage, 10, 10, None, shoot_delay=1000, isTaken=False)
+                15, 15, weaponImage, 100, 100, None, shoot_delay=300, isTaken=False)
         guns.append(gun)
     return guns
 

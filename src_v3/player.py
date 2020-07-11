@@ -90,6 +90,7 @@ class Player(pygame.sprite.Sprite):
         if len(self.weapons) == 2:
             self.weapons[0], self.weapons[1] = self.weapons[1], self.weapons[0]
         print (self.weapons[0])
+
     def draw(self, screen):
         # 血條
         if self.life > 0:
@@ -116,8 +117,9 @@ class Player(pygame.sprite.Sprite):
         if self.bullets :
             for bullet in self.bullets :
                 bullet.draw(screen)
+                
 
-    def moveHandle(self, allWeapons, bullets):
+    def moveHandle(self, allWeapons, other):
         keys = self.keys
         if keys[pygame.K_a]:
             self.moveLeft()
@@ -138,6 +140,8 @@ class Player(pygame.sprite.Sprite):
         if self.mouse_get_pressed[0] : 
             if self.present_weapon :
                 self.present_weapon.attack()
+        for bullet in self.bullets:
+            bullet.hit(other)
             
     def calFacing(self):  # 算人物面向的角度
         theta = 0

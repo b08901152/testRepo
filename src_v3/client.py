@@ -42,9 +42,9 @@ def main():
         me.keys = pygame.key.get_pressed()
         me.mouse_get_pressed = pygame.mouse.get_pressed()
         me.mouse_get_pos = pygame.mouse.get_pos()
-        me.moveHandle(gun_sprites,None)
-
         other = n.send(me)
+        me.moveHandle(gun_sprites,other)
+
         all_sprites.add(other)
 
         all_sprites.update()
