@@ -3,8 +3,8 @@ from _thread import *
 from player import Player
 import pickle
 import pygame
-
-server = "172.20.10.5"
+from gamebasic import * 
+server = ipAddress
 
 port = 5555
 

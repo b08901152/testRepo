@@ -19,8 +19,13 @@ class Player(pygame.sprite.Sprite):
         self.middleX = self.x+self.w//2
         self.middleY = self.y+self.h//2
         self.weapons = []
+        self.bullets = []
         self.can_pick = True
         self.present_weapon = None
+        self.keys = None
+        self.mouse_get_pressed = None
+        self.mouse_get_pos = None
+
 
     def moveUp(self):
         if not self.rect.top < 0:
@@ -51,6 +56,7 @@ class Player(pygame.sprite.Sprite):
         for weapon in weapons:
             if not weapon.isTaken and pygame.sprite.collide_rect(weapon, self) and pick_count == 0:
                 weapon.isTaken = True
+                weapon.player = self
                 # 如果玩家武器數小於2 直接append到self
                 if len(self.weapons) < 2:
                     self.weapons.append(weapon)
@@ -83,7 +89,7 @@ class Player(pygame.sprite.Sprite):
     def changeWeapon(self):
         if len(self.weapons) == 2:
             self.weapons[0], self.weapons[1] = self.weapons[1], self.weapons[0]
-
+        print (self.weapons[0])
     def draw(self, screen):
         # 血條
         if self.life > 0:
@@ -95,7 +101,7 @@ class Player(pygame.sprite.Sprite):
             pygame.draw.rect(screen, RED,
                              (self.rect.centerx-self.w/2, self.rect.centery-self.h/1.5, 70, 5))
         # 人物隨滑鼠旋轉
-        self.facing = self.calFacing()
+        
         image = pygame.image.fromstring(
             self.imgString, (self.w, self.h), "RGBA")
         rotate_image = pygame.transform.rotate(
@@ -103,8 +109,16 @@ class Player(pygame.sprite.Sprite):
         self.rect = rotate_image.get_rect(
             center=(self.rect.centerx, self.rect.centery))
         screen.blit(rotate_image, (self.rect.x, self.rect.y))
-        
-    def moveHandle(self, keys, allWeapons):
+
+        if self.present_weapon :
+            self.present_weapon.draw(screen)
+
+        if self.bullets :
+            for bullet in self.bullets :
+                bullet.draw(screen)
+
+    def moveHandle(self, allWeapons, bullets):
+        keys = self.keys
         if keys[pygame.K_a]:
             self.moveLeft()
         if keys[pygame.K_d]:
@@ -115,26 +129,19 @@ class Player(pygame.sprite.Sprite):
             self.moveDown()
         if keys[pygame.K_SPACE] and self.can_pick == True:
             print("SPACE PRESSED")
-            pass
             self.pickUpWeapon(allWeapons)
             # self.pickUpClips(clips)
         if keys[pygame.K_r]:
             print("r pressed")
-            # =======
-            #             self.can_pick=False
-            #         if not keys[pygame.K_SPACE] and self.can_pick==False:
-            #             self.can_pick=True
-            #         if keys[pygame.K_s]:
-            # >>>>>>> e82948477d5767465d71406e7d10755f26c7f7f7
-            self.changeWeapon()
-        if pygame.mouse.get_pressed()[0]:
-            print("mouse click")
-            # for weapon in self.weapons:
-            #     weapon.attack()
 
+            self.changeWeapon()
+        if self.mouse_get_pressed[0] : 
+            if self.present_weapon :
+                self.present_weapon.attack()
+            
     def calFacing(self):  # 算人物面向的角度
         theta = 0
-        pos = pygame.mouse.get_pos()
+        pos = self.mouse_get_pos
         deltaY = (pos[1] - self.middleY)
         deltaX = (pos[0] - self.middleX)
         if deltaX == 0 and deltaY > 0:
@@ -145,3 +152,8 @@ class Player(pygame.sprite.Sprite):
         if deltaX < 0:
             theta += math.pi
         return theta
+
+    def update(self):
+        if self.mouse_get_pos :
+            self.facing = self.calFacing()
+        
