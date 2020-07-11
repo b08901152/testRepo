@@ -16,10 +16,6 @@ my_sprites = pygame.sprite.Group()
 gun_sprites = pygame.sprite.Group()
 clip_sprites = pygame.sprite.Group()
 
-guns = gun.createGuns(number=3)
-for i in range(3):
-    gun_sprites.add(guns[i])
-
 
 def redrawWindow(screen, me, other):
     screen.blit(background, (0, 0))

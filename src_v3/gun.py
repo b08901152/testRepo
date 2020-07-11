@@ -2,14 +2,6 @@ import random
 import pygame
 from gamebasic import *
 
-def createGuns(number):
-    guns = []
-    weaponImage = pygame.image.load("../lib/image/gun.png")
-    for i in range(number):
-        gun = Gun('i', random.randint(0, SCREENWIDTH),  random.randint(0, SCREENHEIGHT),
-                15, 15, weaponImage, 10, 10, None, shoot_delay=1000, isTaken=False)
-        guns.append(gun)
-    return guns
 
 class Gun(pygame.sprite.Sprite):
     def __init__(self, name, x, y, w, h, image, max_ammunition, atkPoint, player, shoot_delay, isTaken):
